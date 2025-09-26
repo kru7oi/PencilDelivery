@@ -21,8 +21,10 @@
     <div class="products-list">
         @foreach (var product in Model.Product)
         {
+            var photos = Model.Photo.Where(p => p.ProductId == product.Id);
+
             <article class="product-card">
-                <img class="card-image" src="#" />
+                <img class="card-image" src="@photos.ToArray()[0].Url" />
                 <p class="card-rating">@Html.DisplayFor(item => product.Rating)</p>
                 <p class="card-title">@Html.DisplayFor(item => product.Title)</p>
                 <p class="card-volume">@Html.DisplayFor(item => product.Volume)</p>

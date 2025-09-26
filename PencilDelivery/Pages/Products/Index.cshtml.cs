@@ -20,6 +20,7 @@ namespace PencilDelivery.Pages.Products
 
         public IList<Product> Product { get;set; } = default!;
         public IList<Category> Category { get;set; } = default!;
+        public IList<Photo> Photo { get;set; } = default!;
         
 
         public async Task OnGetAsync()
@@ -30,6 +31,9 @@ namespace PencilDelivery.Pages.Products
                 .Include(p => p.Unit).ToListAsync();
 
             Category = await _context.Categories.ToListAsync();
+
+            Photo = await _context.Photos
+                .Include(p => p.Product).ToListAsync();
         }
     }
 }
