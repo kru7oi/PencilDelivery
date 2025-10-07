@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PencilDelivery.Models;
 
@@ -8,6 +10,8 @@ public partial class Product
     public int Id { get; set; }
 
     public string Title { get; set; } = null!;
+
+    [DisplayFormat(DataFormatString = "{0:F0} ₽")]
 
     public decimal PricePerUnit { get; set; }
 

@@ -21,19 +21,39 @@ namespace PencilDelivery.Pages.Products
         public IList<Product> Product { get;set; } = default!;
         public IList<Category> Category { get;set; } = default!;
         public IList<Photo> Photo { get;set; } = default!;
+
+        [BindProperty(SupportsGet = true)]
+        public string? SearchString { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public Category SelectedCategory { get; set; }
         
-
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            Product = await _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Manufacturer)
-                .Include(p => p.Unit).ToListAsync();
-
             Category = await _context.Categories.ToListAsync();
 
             Photo = await _context.Photos
                 .Include(p => p.Product).ToListAsync();
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                Product = await _context.Products
+                    .Where(p => p.Title.Contains(SearchString)).ToListAsync();
+            }
+            else
+            {
+                Product = await _context.Products.ToListAsync();
+            }
+
+
+            if (id != null)
+            {
+                SelectedCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+
+                Product = await _context.Products
+                        .Where(p => p.CategoryId == SelectedCategory.Id).ToListAsync();
+            }
+
+            return Page();
         }
     }
 }

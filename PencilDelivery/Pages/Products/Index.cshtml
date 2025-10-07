@@ -2,39 +2,50 @@
 @model PencilDelivery.Pages.Products.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <section class="products">
-    <div class="products-category">
-        <h3 class="categories-title">Каталог товаров</h3>
-        <nav class="category-navigation">
-            @foreach (var category in Model.Category)
-            {
-                <a class="category-link">
-                    <img src="@Html.DisplayFor(item => category.IconUrl)" />
-                    <p>@Html.DisplayFor(item => category.Name)</p>
-                </a>
-            }
-        </nav>
-    </div>
-    <div class="products-list">
-        @foreach (var product in Model.Product)
-        {
-            var photos = Model.Photo.Where(p => p.ProductId == product.Id);
+	<div class="products-category">
+		<h3 class="categories-title">Категории товаров</h3>
+		<nav class="category-navigation">
+			@foreach (var category in Model.Category)
+			{
+				<a class="category-link" asp-route-id="@category.Id">
+					<img src="@Html.DisplayFor(item => category.IconUrl)" />
+					<p>@Html.DisplayFor(item => category.Name)</p>
+				</a>
+			}
+		</nav>
+	</div>
 
-            <article class="product-card">
-                <img class="card-image" src="@photos.ToArray()[0].Url" />
-                <p class="card-rating">@Html.DisplayFor(item => product.Rating)</p>
-                <p class="card-title">@Html.DisplayFor(item => product.Title)</p>
-                <p class="card-volume">@Html.DisplayFor(item => product.Volume)</p>
-                <span>
-                    <p class="card-price">@Html.DisplayFor(item => product.PricePerUnit)</p>
-                    <p class="card-unit">@Html.DisplayFor(item => product.Unit.Name)</p>
-                </span>
-                <button class="card-button">В корзину</button>
-            </article>
-        }
-    </div>
+	<div class="products-list">
+		<form class="search-form">
+			<label>Поиск по названию: <input type="text" asp-for="SearchString" /></label>
+			<input type="submit" value="Найти" />
+		</form>
+
+		<div class="product-cards">
+			@foreach (var product in Model.Product)
+			{
+				var photos = Model.Photo.Where(p => p.ProductId == product.Id);
+
+				<article class="product-card">
+					<img class="card-image" src="@photos.ToArray()[0].Url" />
+
+					<div class="card-information">
+						<p class="card-rating">@Html.DisplayFor(item => product.Rating)</p>
+						<a class="card-title" href="#">@Html.DisplayFor(item => product.Title)</a>
+						<p class="card-volume">@Html.DisplayFor(item => product.Volume)</p>
+						<span>
+							<p class="card-price">@Html.DisplayFor(item => product.PricePerUnit)</p>
+							<p class="card-unit">@Html.DisplayFor(item => product.Unit.Name)</p>
+						</span>
+						<button class="card-button">В корзину</button>
+					</div>
+				</article>
+			}
+		</div>
+	</div>
 </section>
 
